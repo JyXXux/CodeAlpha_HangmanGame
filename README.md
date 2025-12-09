@@ -101,7 +101,7 @@ project-folder/
 │
 ├── hangman.py        # Main game file
 ├── readme.md         # Documentation
-└── assets/           # (Optional) Extra word lists, ASCII art
+
 ```
 
 ---
