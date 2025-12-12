@@ -105,19 +105,19 @@ def play_game():
     secret_word = random.choice(word_list)
     display = ["_"] * len(secret_word)
     guessed_letters = []
+    wrong_attempts = 0  # track wrong guesses
 
     clear_screen()
     print("🎮 Game Started! Guess the word.\n")
 
     # Game Loop
     while lives > 0 and "_" in display:
-        print(hangman_stages[min(lives, 6)])
+        print(hangman_stages[wrong_attempts])
         print("Word:", " ".join(display))
         print("Guessed letters:", guessed_letters)
         print("Lives remaining:", lives, "\n")
 
         guess = input("Enter a letter: ").lower()
-
         clear_screen()
 
         if len(guess) != 1 or not guess.isalpha():
@@ -137,10 +137,11 @@ def play_game():
                     display[i] = guess
         else:
             print("✖ Wrong!\n")
+            wrong_attempts += 1
             lives -= 1
 
     # Result
-    print(hangman_stages[min(lives, 6)])
+    print(hangman_stages[wrong_attempts])
     if "_" not in display:
         print("🎉 You WON! The word was:", secret_word)
     else:
@@ -159,8 +160,6 @@ def main_menu():
 
         if option == "1":
             play_game()
-
-            # Replay
             again = input("\nDo you want to play again? (yes/no): ").lower()
             if again != "yes":
                 clear_screen()
