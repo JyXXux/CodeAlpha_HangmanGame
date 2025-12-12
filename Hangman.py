@@ -8,11 +8,28 @@ def clear_screen():
 # ---------------- Hangman ASCII Art ---------------- #
 hangman_stages = [
     """
+       
+       
+       
+       
+       
+    ===========
+    """,
+    """
+       _______
+      |
+      |
+      |
+      |
+      |
+    ===========
+    """,
+    """
        _______
       |       |
-      |       O
-      |      /|\\
-      |      / \\
+      |
+      |
+      |
       |
     ===========
     """,
@@ -20,16 +37,7 @@ hangman_stages = [
        _______
       |       |
       |       O
-      |      /|\\
-      |      /
       |
-    ===========
-    """,
-    """
-       _______
-      |       |
-      |       O
-      |      /|\\
       |
       |
     ===========
@@ -47,7 +55,7 @@ hangman_stages = [
        _______
       |       |
       |       O
-      |
+      |      /|\\
       |
       |
     ===========
@@ -55,18 +63,19 @@ hangman_stages = [
     """
        _______
       |       |
-      |
-      |
-      |
+      |       O
+      |      /|\\
+      |      /
       |
     ===========
     """,
     """
-       
-       
-       
-       
-       
+       _______
+      |       |
+      |       O
+      |      /|\\
+      |      / \\
+      |
     ===========
     """
 ]
@@ -84,7 +93,6 @@ def play_game():
     print("2. Medium (6 lives)")
     print("3. Hard (4 lives)")
 
-    # Difficulty selection
     while True:
         choice = input("Enter choice (1/2/3): ")
         if choice == "1":
@@ -105,14 +113,19 @@ def play_game():
     secret_word = random.choice(word_list)
     display = ["_"] * len(secret_word)
     guessed_letters = []
-    wrong_attempts = 0  # track wrong guesses
+    wrong_attempts = 0
+
+    max_stages = len(hangman_stages) - 1
 
     clear_screen()
     print("🎮 Game Started! Guess the word.\n")
 
     # Game Loop
     while lives > 0 and "_" in display:
-        print(hangman_stages[wrong_attempts])
+        # Correct direction: hangman appears as wrong_attempts increase
+        stage_index = min(wrong_attempts, max_stages)
+        print(hangman_stages[stage_index])
+
         print("Word:", " ".join(display))
         print("Guessed letters:", guessed_letters)
         print("Lives remaining:", lives, "\n")
@@ -131,17 +144,19 @@ def play_game():
         guessed_letters.append(guess)
 
         if guess in secret_word:
-            print("✔ Correct!\n")
-            for i in range(len(secret_word)):
-                if secret_word[i] == guess:
+            for i, letter in enumerate(secret_word):
+                if letter == guess:
                     display[i] = guess
+            print("✔ Correct!\n")
         else:
             print("✖ Wrong!\n")
             wrong_attempts += 1
             lives -= 1
 
-    # Result
-    print(hangman_stages[wrong_attempts])
+    # Final stage display
+    stage_index = min(wrong_attempts, max_stages)
+    print(hangman_stages[stage_index])
+
     if "_" not in display:
         print("🎉 You WON! The word was:", secret_word)
     else:
@@ -165,14 +180,13 @@ def main_menu():
                 clear_screen()
                 print("Thank you for playing! 👋")
                 break
-
         elif option == "2":
             clear_screen()
             print("Goodbye! 👋")
             break
-
         else:
             print("Invalid choice! Try again.\n")
 
-# Run menu
-main_menu()
+# ---------------- Run Game ---------------- #
+if __name__ == "__main__":
+    main_menu()
